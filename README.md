@@ -67,3 +67,6 @@ options: [
 * accept the roomid as input
 * print that room
 
+## step 5
+* add options
+
