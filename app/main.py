@@ -71,6 +71,7 @@ else:
 start()
 f = open(username + ".txt", "r")
 currentRoom = rooms[f.read()]
+# 
 while playing:
     printroom(currentRoom)
     for key in currentRoom.options.values():
