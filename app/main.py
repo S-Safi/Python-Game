@@ -58,19 +58,26 @@ def start():
         introput = input()
     cls()
 
-if path.exists("save.txt"):
-    f = open("save.txt", "r")
+username = input('enter username: ')
+if path.exists(username + ".txt"):
+    f = open(username + ".txt", "r")
     currentRoom = rooms[f.read()]
 else:
     currentRoom = rooms["room-1"]
+    f = open(username + ".txt", "w")
+    f.write(currentRoom.id)
+    f.close
+
 start()
+f = open(username + ".txt", "r")
+currentRoom = rooms[f.read()]
 while playing:
     printroom(currentRoom)
     for key in currentRoom.options.values():
         print(key.text)
     input1 = input("Input: ")
     if input1 == 'q':
-        f = open("save.txt", "w")
+        f = open(username + ".txt", "w")
         f.write(currentRoom.id)
         f.close
         break
