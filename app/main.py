@@ -21,6 +21,11 @@ class Option:
         self.text = text
         self.id = id
 
+class Player:
+    def __init__(self, name, health):
+        self.name = name
+        self.health = health
+
 def decideUponOption(option):
     if option == "dead":
         start()
@@ -52,7 +57,7 @@ playing = True
 
 def start():
     cls()
-    print("welcome to game")
+    print("welcome to game test")
     introput = input("Press enter to continue: ")
     while introput != '':
         introput = input()
@@ -61,25 +66,29 @@ def start():
 username = input('enter username: ')
 if path.exists(username + ".txt"):
     f = open(username + ".txt", "r")
-    currentRoom = rooms[f.read()]
+    currentRoom = rooms[f.readline().rstrip()]
+    player = Player(username, f.readline().rstrip())
 else:
     currentRoom = rooms["room-1"]
     f = open(username + ".txt", "w")
     f.write(currentRoom.id)
+    f.write("\n")
+    f.write("100")
     f.close
+    player = Player(username, "100")
 
 start()
-f = open(username + ".txt", "r")
-currentRoom = rooms[f.read()]
-# 
 while playing:
     printroom(currentRoom)
     for key in currentRoom.options.values():
         print(key.text)
+    print(player.name, "Health: " + player.health)
     input1 = input("Input: ")
     if input1 == 'q':
         f = open(username + ".txt", "w")
         f.write(currentRoom.id)
+        f.write("\n")
+        f.write(player.health)
         f.close
         break
     if currentRoom.options[input1].id in rooms.keys():
