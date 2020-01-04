@@ -1,8 +1,8 @@
 import os
+saveDirectory = "saves"
 
 def cls():
     os.system('cls')
-
 class Room:
     def __init__(self, id, text, options):
         self.id = id
@@ -67,25 +67,30 @@ def login():
     cls()
     return input('enter username: ')
 
+def createDir():
+    os.mkdir(saveDirectory)
+
 def saveGameData(username, gameData):
-    f = open(username + ".txt", "w")
+    f = open(saveDirectory + '/' + username + ".txt", "w")
     f.write(gameData.room)
     f.write("\n")
     f.write(str(gameData.health))
     f.write("\n")
     f.close
 
-
 def loadGameData(username):
-    f = open(username + ".txt", "r")
+    f = open(saveDirectory + '/' + username + ".txt", "r")
     room = f.readline().rstrip()
     health = int(f.readline().rstrip())
     gameData = GameData(room, health)
     f.close
     return gameData
 
+
 def initGameData(username):
-    if not os.path.exists(username + ".txt"):
+    if not os.path.exists(saveDirectory):
+        createDir()
+    if not os.path.exists(saveDirectory + '/' + username + ".txt"):
         gameData = GameData("room-1", 100)
         saveGameData(username, gameData)
     else:
