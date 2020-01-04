@@ -1,6 +1,9 @@
 import os
 saveDirectory = "saves"
 
+def getSaveFilePath(username):
+    return saveDirectory + '/' + username + ".txt"
+
 def cls():
     os.system('cls')
 class Room:
@@ -71,7 +74,7 @@ def createDir():
     os.mkdir(saveDirectory)
 
 def saveGameData(username, gameData):
-    f = open(saveDirectory + '/' + username + ".txt", "w")
+    f = open(getSaveFilePath(username), "w")
     f.write(gameData.room)
     f.write("\n")
     f.write(str(gameData.health))
@@ -79,7 +82,7 @@ def saveGameData(username, gameData):
     f.close
 
 def loadGameData(username):
-    f = open(saveDirectory + '/' + username + ".txt", "r")
+    f = open(getSaveFilePath(username), "r")
     room = f.readline().rstrip()
     health = int(f.readline().rstrip())
     gameData = GameData(room, health)
@@ -90,7 +93,7 @@ def loadGameData(username):
 def initGameData(username):
     if not os.path.exists(saveDirectory):
         createDir()
-    if not os.path.exists(saveDirectory + '/' + username + ".txt"):
+    if not os.path.exists(getSaveFilePath(username)):
         gameData = GameData("room-1", 100)
         saveGameData(username, gameData)
     else:
