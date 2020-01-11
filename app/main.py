@@ -17,6 +17,21 @@ class Room:
         self.text = text
         self.options = options
 
+class Option:
+    def __init__(self, text, id):
+        self.text = text
+        self.id = id
+
+class Player:
+    def __init__(self, name, health):
+        self.name = name
+        self.health = health
+
+class GameData:
+    def __init__(self, room, health):
+        self.room = room
+        self.health = health
+
 def readRoom(roomName):
     f = open(getRoomFilePath(roomName), "r")
     line = f.readline().rstrip()
@@ -36,23 +51,13 @@ def readRoom(roomName):
     return room
 
 def printroom(room):
-           print("-----------")
-           print(room.text)
+    print("-----------")
+    print(room.text)
+    for key in room.options.values():
+        print(key.text)
 
-class Option:
-    def __init__(self, text, id):
-        self.text = text
-        self.id = id
-
-class Player:
-    def __init__(self, name, health):
-        self.name = name
-        self.health = health
-
-class GameData:
-    def __init__(self, room, health):
-        self.room = room
-        self.health = health
+def printPlayer(player):
+    print(player.name, "Health: " + str(player.health))
 
 def printInstructions():
     cls()
@@ -105,9 +110,7 @@ def playGame():
     currentRoom = readRoom(currentRoomId)
     while True:
         printroom(currentRoom)
-        for key in currentRoom.options.values():
-            print(key.text)
-        print(player.name, "Health: " + str(player.health))
+        printPlayer(player)
         input1 = input("Input: ")
         if input1 == 'q':
             saveGameData(username, GameData(currentRoom.id, player.health))
