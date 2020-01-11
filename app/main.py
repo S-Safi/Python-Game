@@ -12,10 +12,11 @@ def cls():
     os.system('cls')
 
 class Room:
-    def __init__(self, id, text, options):
+    def __init__(self, id, text, options, visited):
         self.id = id
         self.text = text
         self.options = options
+        self.visited = visited
 
 class Option:
     def __init__(self, text, id):
@@ -47,14 +48,23 @@ def readRoom(roomName):
         options[str(i)] = Option(line, Id)
         line = f.readline().rstrip()
         i += 1
-    room = Room(roomName, fullText, options)
+    room = Room(roomName, fullText, options, False)
     return room
+
+def readRooms():
+    rooms = {}
+    for file in os.listdir("rooms"):
+        roomName = file.strip(".txt")
+        rooms[roomName] = readRoom(roomName)
+    return rooms
 
 def printroom(room):
     print("-----------")
     print(room.text)
     for key in room.options.values():
         print(key.text)
+    if room.visited == True:
+        print("You have visited this room before") 
 
 def printPlayer(player):
     print(player.name, "Health: " + str(player.health))
@@ -104,10 +114,11 @@ def initGameData(username):
 def playGame():
     username = login()
     gameData = initGameData(username)
+    rooms = readRooms()
     printInstructions()
     player = Player(username, gameData.health)
     currentRoomId = gameData.room
-    currentRoom = readRoom(currentRoomId)
+    currentRoom = rooms[currentRoomId]
     while True:
         printroom(currentRoom)
         printPlayer(player)
@@ -116,6 +127,6 @@ def playGame():
             saveGameData(username, GameData(currentRoom.id, player.health))
             cls()
             break
-        currentRoom = readRoom(currentRoom.options[input1].id)
+        currentRoom = rooms[currentRoom.options[input1].id]
         cls()
 playGame()
