@@ -1,0 +1,7 @@
+You are in Room 2
+---
+1. Go West
+room-4
+2. Go East
+room-1
+|-|

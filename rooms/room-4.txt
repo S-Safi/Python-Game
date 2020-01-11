@@ -1,0 +1,5 @@
+You are in Room 4, you lose
+---
+1. Restart
+room-1
+|-|
