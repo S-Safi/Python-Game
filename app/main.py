@@ -28,10 +28,16 @@ class Player:
         self.name = name
         self.health = health
 
+class RoomData:
+    def __init__(self, id, visited):
+        self.id = id
+        self.visited = visited
+
 class GameData:
-    def __init__(self, room, health):
+    def __init__(self, room, health, rooms):
         self.room = room
         self.health = health
+        self.rooms = rooms
 
 def readRoom(roomName):
     f = open(getRoomFilePath(roomName), "r")
@@ -84,28 +90,45 @@ def login():
 def createDir():
     os.mkdir(saveDirectory)
 
+def createRoomData(rooms):
+    roomDataArray = []
+    for id in rooms.keys():
+        temp = RoomData(id, rooms[id].visited)
+        roomDataArray.append(temp)
+    return roomDataArray
+
+def createGameData(currentRoom, player, rooms):
+    roomData = createRoomData(rooms)
+    gameData = GameData(currentRoom.id, player.health, roomData)
+    return gameData
+
 def saveGameData(username, gameData):
     f = open(getSaveFilePath(username), "w")
     f.write(gameData.room)
     f.write("\n")
     f.write(str(gameData.health))
     f.write("\n")
-    f.close
+    for i in gameData.rooms:
+        f.write("---\n")
+        f.write(i.id)
+        f.write("\n")
+        f.write("visited: " + str(i.visited))
+        f.write("\n")
+    f.close()
 
 def loadGameData(username):
     f = open(getSaveFilePath(username), "r")
     room = f.readline().rstrip()
     health = int(f.readline().rstrip())
-    gameData = GameData(room, health)
-    f.close
+    gameData = GameData(room, health, [])
+    f.close()
     return gameData
-
 
 def initGameData(username):
     if not os.path.exists(saveDirectory):
         createDir()
     if not os.path.exists(getSaveFilePath(username)):
-        gameData = GameData("room-1", 100)
+        gameData = GameData("room-1", 100,[])
         saveGameData(username, gameData)
     else:
         gameData = loadGameData(username)
@@ -124,9 +147,11 @@ def playGame():
         printPlayer(player)
         input1 = input("Input: ")
         if input1 == 'q':
-            saveGameData(username, GameData(currentRoom.id, player.health))
+            gameData = createGameData(currentRoom, player, rooms)
+            saveGameData(username, gameData)
             cls()
             break
+        currentRoom.visited = True
         currentRoom = rooms[currentRoom.options[input1].id]
         cls()
 playGame()
